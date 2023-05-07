@@ -3,7 +3,7 @@
 # User-specific stuff
 # JetBrains
 .DS_Store
-.idea
+/.idea
 
 
 # dependencies
