@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -14,8 +14,30 @@ import Typography from "@mui/material/Typography";
 // @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
+import { userLogin } from "../../store/authActions";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  // @ts-ignore
+  const { loading, userInfo, userToken, error } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const { register, handleSubmit } = useForm();
+  const navigate = useNavigate();
+
+  // @ts-ignore
+  const submitForm = (data) => {
+    // @ts-ignore
+    dispatch(userLogin(data));
+  };
+
+  useEffect(() => {
+    if (userToken || userToken) {
+      navigate("/user-profile");
+    }
+  }, [navigate, userInfo]);
+
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
@@ -51,26 +73,31 @@ function Login() {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit(submitForm)}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
+              {...register("email")}
             />
             <TextField
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
+              {...register("password")}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

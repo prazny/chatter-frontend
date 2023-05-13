@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,21 +13,30 @@ import Typography from "@mui/material/Typography";
 // @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/authActions";
-import { useForm } from 'react-hook-form'
+import { useForm } from "react-hook-form";
 
 function Register() {
-  const { loading, userInfo, error, success } = useSelector(
+  const { loading, userInfo, userToken, error, success } = useSelector(
     // @ts-ignore
     (state) => state.auth
   );
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (success) navigate("/login");
+    if (userToken) navigate("/user-profile");
+  }, [navigate, userInfo, success]);
+
+  // @ts-ignore
   const submitForm = (data) => {
     data.email = data.email.toLowerCase();
+    // @ts-ignore
     dispatch(registerUser(data));
   };
 
@@ -76,9 +85,19 @@ function Register() {
               margin="normal"
               required
               fullWidth
+              id="firstName"
+              label="First name"
+              autoComplete="firstName"
+              autoFocus
+              disabled={loading}
+              {...register("firstName")}
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
               id="email"
               label="Email Address"
-              name="email"
               autoComplete="email"
               autoFocus
               {...register("email")}
@@ -87,7 +106,6 @@ function Register() {
               margin="normal"
               required
               fullWidth
-              name="password"
               label="Password"
               type="password"
               id="password"
