@@ -18,17 +18,12 @@ import chatter from "./../../../assets/chatter.png";
 import logo from "./../../../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/authSlice";
-import GuestNavbar from "./GuestNavbar";
+import {Link} from "react-router-dom";
 
 const pages = ["Sites", "Chats", "Stats"];
 const settings = ["Profile", "Logout"];
 
-function Navbar() {
-  const dispatch = useDispatch();
-  const { userToken, userInfo } = useSelector(
-    // @ts-ignore
-    (state) => state.auth
-  );
+function GuestNavbar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -56,8 +51,6 @@ function Navbar() {
     // @ts-ignore
     dispatch(logout());
   };
-
-  if (!userInfo || !userToken) return <GuestNavbar />;
 
   return (
     <AppBar position="static">
@@ -106,14 +99,7 @@ function Navbar() {
               sx={{
                 display: { xs: "block", md: "none" },
               }}
-            >
-              {userToken &&
-                pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-            </Menu>
+            ></Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
           <Typography
@@ -134,52 +120,34 @@ function Navbar() {
           >
             <img src="./../../../assets/chatter.png" alt="Chatter text" />
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {userToken &&
-              pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
-          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}></Box>
 
           <Typography
             sx={{
               mr: 2,
             }}
-          >
-            {userInfo && userInfo.firstName} {userInfo && userInfo.lastName}
-          </Typography>
+          ></Typography>
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title="Open settings">
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem key="logout" onClick={logoutCl}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
-            </Menu>
+            <Link to="/login">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 1, mr: 2 }}
+              >
+                Login
+              </Button>
+            </Link>
+            <Link to="/register">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleOpenUserMenu}
+                sx={{ p: 1 }}
+              >
+                Register
+              </Button>
+            </Link>
           </Box>
         </Toolbar>
       </Container>
@@ -187,4 +155,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default GuestNavbar;
