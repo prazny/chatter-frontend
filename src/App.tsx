@@ -15,6 +15,7 @@ import Sidebar from "./components/ui/layout/Sidebar";
 import Toolbar from "@mui/material/Toolbar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Layout from "./components/ui/layout/Layout";
+import {ToastContainer} from "react-toastify";
 
 export default function App() {
     // @ts-ignore

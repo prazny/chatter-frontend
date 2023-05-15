@@ -23,7 +23,7 @@ function Sidebar() {
             <Toolbar/>
             <Box sx={{overflow: 'auto'}}>
                 <List>
-                    {['Chats here', 'Chats here', 'Chats here'].map((text, index) => (
+                    {['Chats here 1', 'Chats here 2', 'Chats here 3'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
@@ -36,7 +36,7 @@ function Sidebar() {
                 </List>
                 <Divider/>
                 <List>
-                    {['Chats here', 'Chats here', 'Chats here'].map((text, index) => (
+                    {['Chats here 1', 'Chats here 2', 'Chats here 3'].map((text, index) => (
                         <ListItem key={text} disablePadding>
                             <ListItemButton>
                                 <ListItemIcon>
