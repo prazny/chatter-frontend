@@ -15,14 +15,15 @@ import Button from "@mui/material/Button";
 import {useForm} from "react-hook-form";
 import {usePatchUserMutation} from "../../services/auth";
 import {toast} from "react-toastify";
+import ErrorSpan from "../../components/ui/ErrorSpan";
 
 function UserProfile() {
-    const {loading, userInfo, error, success} = useSelector(
+    const {loading, userInfo, success} = useSelector(
         // @ts-ignore
         (state) => state.auth
     );
     const {register, handleSubmit, reset} = useForm();
-    const [patchUser, {isLoading}] = usePatchUserMutation();
+    const [patchUser, {error}] = usePatchUserMutation();
 
     // @ts-ignore
     const submitForm = (data) => {
@@ -34,7 +35,9 @@ function UserProfile() {
                 toast.success("Password updated");
                 reset();
             })
-            .catch((error) => console.log('err'));
+            .catch((e) => {
+                toast.error("Errors occured");
+            });
     };
 
     return (
@@ -99,6 +102,11 @@ function UserProfile() {
                             breaches.
                         </Typography>
                         <TextField
+                            // @ts-ignore
+                            error={error && error?.data.errors.password[0]}
+
+                            helperText={error && error?.data.errors.password[0]}
+                            type="password"
                             margin="normal"
                             required
                             fullWidth
