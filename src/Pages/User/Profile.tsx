@@ -1,13 +1,10 @@
-import CssBaseline from "@mui/material/CssBaseline";
 import React from "react";
 import Grid from "@mui/material/Grid";
 import {useSelector} from "react-redux";
 // @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
-import {Parallax, ParallaxProvider} from "react-scroll-parallax";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import RoundedBox from "../../components/ui/RoundedBox";
 import TextField from "@mui/material/TextField";
@@ -15,7 +12,6 @@ import Button from "@mui/material/Button";
 import {useForm} from "react-hook-form";
 import {usePatchUserMutation} from "../../services/auth";
 import {toast} from "react-toastify";
-import ErrorSpan from "../../components/ui/ErrorSpan";
 
 function UserProfile() {
     const {loading, userInfo, success} = useSelector(
@@ -40,6 +36,7 @@ function UserProfile() {
             });
     };
 
+    // @ts-ignore
     return (
         <Grid container>
             <Grid item xs={12} sm={12} md={12}
@@ -104,7 +101,7 @@ function UserProfile() {
                         <TextField
                             // @ts-ignore
                             error={error && error?.data.errors.password[0]}
-
+                            // @ts-ignore
                             helperText={error && error?.data.errors.password[0]}
                             type="password"
                             margin="normal"

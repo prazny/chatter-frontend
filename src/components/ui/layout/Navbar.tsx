@@ -19,8 +19,13 @@ import logo from "./../../../assets/logo.png";
 import {useDispatch, useSelector} from "react-redux";
 import {logout} from "../../../store/authSlice";
 import GuestNavbar from "./GuestNavbar";
+import { Link } from "react-router-dom";
 
-const pages = ["Sites", "Chats", "Stats"];
+const pages = [
+    ["Sites", "/sites"],
+    ["Chats", "/chats"],
+    ["Stats", "/stats"]
+];
 const settings = ["Profile", "Logout"];
 
 function Navbar() {
@@ -107,8 +112,8 @@ function Navbar() {
                         >
                             {userToken &&
                                 pages.map((page) => (
-                                    <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center">{page}</Typography>
+                                    <MenuItem key={page[0]} onClick={handleCloseNavMenu}>
+                                        <Typography textAlign="center">{page[0]}</Typography>
                                     </MenuItem>
                                 ))}
                         </Menu>
@@ -135,13 +140,15 @@ function Navbar() {
                     <Box sx={{flexGrow: 1, display: {xs: "none", md: "flex"}}}>
                         {userToken &&
                             pages.map((page) => (
-                                <Button
-                                    key={page}
-                                    onClick={handleCloseNavMenu}
-                                    sx={{my: 2, color: "white", display: "block"}}
-                                >
-                                    {page}
-                                </Button>
+                                <Link to={page[1]}>
+                                    <Button
+                                        key={page[0]}
+                                        onClick={handleCloseNavMenu}
+                                        sx={{my: 2, color: "white", display: "block"}}
+                                    >
+                                        {page[0]}
+                                    </Button>
+                                </Link>
                             ))}
                     </Box>
 

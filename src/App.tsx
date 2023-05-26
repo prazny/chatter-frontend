@@ -1,21 +1,17 @@
 import {Route, Routes} from "react-router-dom";
 import React, {useEffect} from "react";
 import Home from "./Pages/Home/Home";
-import Navbar from "./components/ui/layout/Navbar";
 import Login from "./Pages/Auth/Login";
 import {createTheme, ThemeProvider} from "@mui/material";
 import Register from "./Pages/Auth/Register";
 import UserProfile from "./Pages/User/Profile";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import {useGetUserDetailsQuery} from "./services/auth";
 import {logout, setCredentials} from "./store/authSlice";
 import ProtectedRoute from "./components/ui/layout/ProtectedRoute";
-import Box from "@mui/material/Box";
-import Sidebar from "./components/ui/layout/Sidebar";
-import Toolbar from "@mui/material/Toolbar";
 import CssBaseline from "@mui/material/CssBaseline";
 import Layout from "./components/ui/layout/Layout";
-import {ToastContainer} from "react-toastify";
+import Sites from "./Pages/Sites/Sites";
 
 export default function App() {
     // @ts-ignore
@@ -53,6 +49,7 @@ export default function App() {
                     <Route path="/register" element={<Register/>}/>
                     <Route element={<ProtectedRoute/>}>
                         <Route path="/user-profile" element={<UserProfile/>}/>
+                        <Route path="/sites" element={<Sites/>}/>
                     </Route>
                 </Routes>
             </Layout>
