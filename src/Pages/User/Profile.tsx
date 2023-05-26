@@ -1,7 +1,6 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import {useSelector} from "react-redux";
-// @ts-ignore
+import { useSelector } from "react-redux";
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -9,32 +8,32 @@ import Typography from "@mui/material/Typography";
 import RoundedBox from "../../components/ui/RoundedBox";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+
 import {useForm} from "react-hook-form";
 import {usePatchUserMutation} from "../../services/auth";
 import {toast} from "react-toastify";
 
-function UserProfile() {
-    const {loading, userInfo, success} = useSelector(
-        // @ts-ignore
-        (state) => state.auth
-    );
-    const {register, handleSubmit, reset} = useForm();
-    const [patchUser, {error}] = usePatchUserMutation();
 
-    // @ts-ignore
-    const submitForm = (data) => {
-        console.log(data.password);
-        // @ts-ignore
-        patchUser({"password": data.password})
-            .unwrap()
-            .then((payload) => {
-                toast.success("Password updated");
-                reset();
-            })
-            .catch((e) => {
-                toast.error("Errors occured");
-            });
-    };
+function UserProfile() {
+  const { loading, userInfo, success } = useSelector(
+    (state: any) => state.auth
+  );
+  const { register, handleSubmit, reset } = useForm();
+  const [patchUser, { error }] = usePatchUserMutation();
+
+  const submitForm = (data: any) => {
+    console.log(data.password);
+    patchUser({ password: data.password })
+      .unwrap()
+      .then((payload) => {
+        toast.success("Password updated");
+        reset();
+      })
+      .catch((e) => {
+        toast.error("Errors occured");
+      });
+  };
+
 
     // @ts-ignore
     return (
@@ -116,11 +115,56 @@ function UserProfile() {
                         <Button variant="contained" type="submit">Update</Button>
                     </Box>
                 </RoundedBox>
+
             </Grid>
-        </Grid>
-
-
-    );
+          </Grid>
+        </RoundedBox>
+      </Grid>
+      <Grid item md={6}>
+        <RoundedBox>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit(submitForm)}
+          >
+            <Typography variant="overline" gutterBottom>
+              Update password
+            </Typography>
+            <Typography>
+              Passwords are used as a security measure to protect access to
+              sensitive information or resources, and updating them regularly
+              helps to reduce the risk of unauthorized access or data breaches.
+            </Typography>
+            <TextField
+              error={
+                error &&
+                (error as any)?.data.errors.password &&
+                (error as any)?.data.errors.password[0]
+              }
+              helperText={
+                error &&
+                (error as any)?.data.errors.password &&
+                (error as any)?.data.errors.password[0]
+              }
+              type="password"
+              margin="normal"
+              required
+              fullWidth
+              id="password"
+              label="New password"
+              autoComplete="password"
+              autoFocus
+              {...register("password")}
+            />
+            <Button variant="contained" type="submit">
+              Update
+            </Button>
+          </Box>
+        </RoundedBox>
+      </Grid>
+    </Grid>
+  );
 }
 
 export default UserProfile;
