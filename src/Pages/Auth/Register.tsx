@@ -10,7 +10,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-// @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
 import { Link, useNavigate } from "react-router-dom";
@@ -20,8 +19,7 @@ import { useForm } from "react-hook-form";
 
 function Register() {
   const { loading, userInfo, userToken, error, success } = useSelector(
-    // @ts-ignore
-    (state) => state.auth
+    (state: any) => state.auth
   );
   const { register, handleSubmit } = useForm();
   const dispatch = useDispatch();
@@ -33,8 +31,7 @@ function Register() {
     if (userToken) navigate("/user-profile");
   }, [navigate, userInfo, success]);
 
-  // @ts-ignore
-  const submitForm = (data) => {
+  const submitForm = (data: any) => {
     data.email = data.email.toLowerCase();
     // @ts-ignore
     dispatch(registerUser(data));

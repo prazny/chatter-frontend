@@ -11,25 +11,28 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-// @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { userLogin } from "../../store/authActions";
 import { useNavigate } from "react-router-dom";
+import { useGetUserDetailsQuery } from "../../services/auth";
 
 function Login() {
-  // @ts-ignore
-  const { loading, userInfo, userToken, error } = useSelector((state) => state.auth);
+  const { loading, userInfo, userToken, error } = useSelector(
+    (state: any) => state.auth
+  );
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // @ts-ignore
-  const submitForm = (data) => {
+  const submitForm = (data: any) => {
     // @ts-ignore
-    dispatch(userLogin(data));
+    dispatch(userLogin(data)).then(() => {
+      navigate("/user-profile");
+      window.location.reload();
+    });
   };
 
   useEffect(() => {
