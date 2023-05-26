@@ -11,7 +11,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-// @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
 import { useDispatch, useSelector } from "react-redux";
@@ -20,20 +19,24 @@ import { userLogin } from "../../store/authActions";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
-  // @ts-ignore
-  const { loading, userInfo, userToken, error } = useSelector((state) => state.auth);
+  const { loading, userInfo, userToken, error } = useSelector(
+    (state) => (state as any).auth
+  );
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // @ts-ignore
-  const submitForm = (data) => {
-    // @ts-ignore
-    dispatch(userLogin(data));
+  const submitForm = async (data: any) => {
+    //@ts-ignore
+    await dispatch(userLogin(data));
+    const token = localStorage.getItem("userToken");
+    if (token) {
+      navigate("/user-profile");
+    }
   };
 
   useEffect(() => {
-    if (userToken || userToken) {
+    if (userToken) {
       navigate("/user-profile");
     }
   }, [navigate, userInfo]);
