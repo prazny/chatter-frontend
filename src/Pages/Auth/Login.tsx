@@ -17,13 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
 import { userLogin, userLoginOAuth } from "../../store/authActions";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 function Login() {
   const { loading, userInfo, userToken, error } = useSelector(
     (state: any) => state.auth
   );
   let [searchParams] = useSearchParams();
-
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -37,12 +37,20 @@ function Login() {
   };
 
   useEffect(() => {
-    if (searchParams.get("t") !== null) {
-      const data = { token: searchParams.get("t"), exp: searchParams.get("e") };
-      // @ts-ignore
-      userLoginOAuth(data);
-      navigate("/user-profile");
-      window.location.reload();
+    if (searchParams.get("t") !== null && searchParams.get("e") !== null) {
+      var token = searchParams.get("t");
+      try {
+        //@ts-ignore
+        var decodedToken = jwtDecode(token);
+        const data = {
+          token: searchParams.get("t"),
+          exp: searchParams.get("e"),
+        };
+        // @ts-ignore
+        userLoginOAuth(data);
+        navigate("/user-profile");
+        window.location.reload();
+      } catch {}
     }
 
     if (userToken || userToken) {
