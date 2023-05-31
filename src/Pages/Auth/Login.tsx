@@ -15,14 +15,15 @@ import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { userLogin } from "../../store/authActions";
-import { useNavigate } from "react-router-dom";
-import { useGetUserDetailsQuery } from "../../services/auth";
+import { userLogin, userLoginOAuth } from "../../store/authActions";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import jwtDecode from "jwt-decode";
 
 function Login() {
   const { loading, userInfo, userToken, error } = useSelector(
     (state: any) => state.auth
   );
+  let [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
@@ -36,6 +37,22 @@ function Login() {
   };
 
   useEffect(() => {
+    if (searchParams.get("t") !== null && searchParams.get("e") !== null) {
+      var token = searchParams.get("t");
+      try {
+        //@ts-ignore
+        var decodedToken = jwtDecode(token);
+        const data = {
+          token: searchParams.get("t"),
+          exp: searchParams.get("e"),
+        };
+        // @ts-ignore
+        userLoginOAuth(data);
+        navigate("/user-profile");
+        window.location.reload();
+      } catch {}
+    }
+
     if (userToken || userToken) {
       navigate("/user-profile");
     }
@@ -124,7 +141,21 @@ function Login() {
                 <Link href="" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
+                {/* <Link
+                  href="http://localhost:8000/api/oauth2/authorization/google"
+                  variant="body2"
+                >
+                  {"Login using google"}
+                </Link> */}
               </Grid>
+              <Button
+                href="http://localhost:8000/api/oauth2/authorization/google"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Login using google
+              </Button>
             </Grid>
             <Copyright />
           </Box>
