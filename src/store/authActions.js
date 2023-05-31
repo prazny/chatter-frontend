@@ -57,3 +57,10 @@ export const userLogin = createAsyncThunk(
     }
   }
 );
+
+export const userLoginOAuth = (data) => {
+  console.log(data);
+  const now = new Date();
+  localStorage.setItem("userToken", data.token);
+  localStorage.setItem("userTokenExpiry", now.getTime() + data.exp);
+};
