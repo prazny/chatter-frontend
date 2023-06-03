@@ -31,10 +31,13 @@
     "react-scroll-parallax": "^3.4.2",
     "react-table": "^7.8.0",
     "react-toastify": "^9.1.2",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
     "sort-by": "^1.2.0",
     "stream": "^0.0.2",
     "util": "^0.12.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "webstomp-client": "^1.2.6"
   },
   "scripts": {
     "start": "react-scripts start",
