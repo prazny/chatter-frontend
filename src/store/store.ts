@@ -7,6 +7,7 @@ import {chatsApi} from "../services/chats";
 export const store = configureStore({
     reducer: {
         auth: authSlice,
+       // ws: wsSlice,
         [authApi.reducerPath]: authApi.reducer,
         [sitesApi.reducerPath]: sitesApi.reducer,
         [chatsApi.reducerPath]: chatsApi.reducer,

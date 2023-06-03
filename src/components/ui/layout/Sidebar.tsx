@@ -1,7 +1,7 @@
 import React from "react";
 import Drawer from '@mui/material/Drawer';
 import Toolbar from "@mui/material/Toolbar";
-import ChatsManager from "../../../features/chats/ChatsManager";
+import ChatsManager from "../../../features/chatList/ChatsManager";
 
 function Sidebar() {
     const drawerWidth = 800;

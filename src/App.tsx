@@ -12,6 +12,7 @@ import ProtectedRoute from "./components/ui/layout/ProtectedRoute";
 import CssBaseline from "@mui/material/CssBaseline";
 import Layout from "./components/ui/layout/Layout";
 import Sites from "./Pages/Sites/Sites";
+import Chat from "./Pages/Chat/Chat";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -47,6 +48,7 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/user-profile" element={<UserProfile />} />
             <Route path="/sites" element={<Sites />} />
+            <Route path="/chat/:id" element={<Chat />} />
           </Route>
         </Routes>
       </Layout>
