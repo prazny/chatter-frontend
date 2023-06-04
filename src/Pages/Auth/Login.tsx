@@ -18,6 +18,8 @@ import { useForm } from "react-hook-form";
 import { userLogin, userLoginOAuth } from "../../store/authActions";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
+import GoogleIcon from "@mui/icons-material/Google";
 
 function Login() {
   const { loading, userInfo, userToken, error } = useSelector(
@@ -30,10 +32,15 @@ function Login() {
 
   const submitForm = (data: any) => {
     // @ts-ignore
-    dispatch(userLogin(data)).then(() => {
-      navigate("/user-profile");
-      window.location.reload();
-    });
+    dispatch(userLogin(data))
+      .unwrap()
+      .then(() => {
+        navigate("/user-profile");
+        window.location.reload();
+      })
+      .catch((e: any) => {
+        toast.error("Bad credentials");
+      });
   };
 
   useEffect(() => {
@@ -131,6 +138,19 @@ function Login() {
             >
               Sign In
             </Button>
+            <Typography align="center">Or</Typography>
+            <Button
+              href="http://localhost:8000/api/oauth2/authorization/google"
+              fullWidth
+              variant="contained"
+              color="inherit"
+              sx={{ mt: 3, mb: 2, justifyContent: "flex-start" }}
+            >
+              <GoogleIcon fontSize="small"></GoogleIcon>
+              <Typography component="p" align="center" sx={{ width: "100%" }}>
+                Login using google
+              </Typography>
+            </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -138,24 +158,10 @@ function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
-                {/* <Link
-                  href="http://localhost:8000/api/oauth2/authorization/google"
-                  variant="body2"
-                >
-                  {"Login using google"}
-                </Link> */}
               </Grid>
-              <Button
-                href="http://localhost:8000/api/oauth2/authorization/google"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Login using google
-              </Button>
             </Grid>
             <Copyright />
           </Box>
