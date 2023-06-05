@@ -16,12 +16,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../store/authActions";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 function Register() {
   const { loading, userInfo, userToken, error, success } = useSelector(
     (state: any) => state.auth
   );
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -34,7 +35,15 @@ function Register() {
   const submitForm = (data: any) => {
     data.email = data.email.toLowerCase();
     // @ts-ignore
-    dispatch(registerUser(data));
+    dispatch(registerUser(data))
+      .unwrap()
+      .then(() => {
+        toast.success("Success on sign up");
+        reset();
+      })
+      .catch((e: any) => {
+        toast.error("Errors occured");
+      });
   };
 
   return (
@@ -79,6 +88,16 @@ function Register() {
             onSubmit={handleSubmit(submitForm)}
           >
             <TextField
+              error={
+                error &&
+                (error as any)?.data.errors.firstName &&
+                (error as any)?.data.errors.firstName[0]
+              }
+              helperText={
+                error &&
+                (error as any)?.data.errors.firstName &&
+                (error as any)?.data.errors.firstName[0]
+              }
               margin="normal"
               required
               fullWidth
@@ -90,6 +109,16 @@ function Register() {
               {...register("firstName")}
             />
             <TextField
+              error={
+                error &&
+                (error as any)?.data.errors.email &&
+                (error as any)?.data.errors.email[0]
+              }
+              helperText={
+                error &&
+                (error as any)?.data.errors.email &&
+                (error as any)?.data.errors.email[0]
+              }
               margin="normal"
               required
               fullWidth
@@ -100,6 +129,16 @@ function Register() {
               {...register("email")}
             />
             <TextField
+              error={
+                error &&
+                (error as any)?.data.errors.password &&
+                (error as any)?.data.errors.password[0]
+              }
+              helperText={
+                error &&
+                (error as any)?.data.errors.password &&
+                (error as any)?.data.errors.password[0]
+              }
               margin="normal"
               required
               fullWidth

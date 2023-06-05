@@ -19,8 +19,8 @@ export const registerUser = createAsyncThunk(
         config
       );
     } catch (error) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
+      if (error.response && error.response) {
+        return rejectWithValue(error.response);
       } else {
         return rejectWithValue(error.message);
       }
@@ -49,8 +49,8 @@ export const userLogin = createAsyncThunk(
       localStorage.setItem("userTokenExpiry", now.getTime() + data.expiresIn);
       return data;
     } catch (error) {
-      if (error.response && error.response.data.message) {
-        return rejectWithValue(error.response.data.message);
+      if (error.response && error.response) {
+        return rejectWithValue(error.response);
       } else {
         return rejectWithValue(error.message);
       }
