@@ -11,28 +11,55 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-// @ts-ignore
 import womanChatting from "../../assets/backgrounds/woman-chatting.jpg";
 import Copyright from "../../components/ui/layout/Copyright";
 import { useDispatch, useSelector } from "react-redux";
 import { useForm } from "react-hook-form";
-import { userLogin } from "../../store/authActions";
-import { useNavigate } from "react-router-dom";
+import { userLogin, userLoginOAuth } from "../../store/authActions";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import jwtDecode from "jwt-decode";
+import { toast } from "react-toastify";
+import GoogleIcon from "@mui/icons-material/Google";
 
 function Login() {
-  // @ts-ignore
-  const { loading, userInfo, userToken, error } = useSelector((state) => state.auth);
+  const { loading, userInfo, userToken, error } = useSelector(
+    (state: any) => state.auth
+  );
+  let [searchParams] = useSearchParams();
   const dispatch = useDispatch();
   const { register, handleSubmit } = useForm();
   const navigate = useNavigate();
 
-  // @ts-ignore
-  const submitForm = (data) => {
+  const submitForm = (data: any) => {
     // @ts-ignore
-    dispatch(userLogin(data));
+    dispatch(userLogin(data))
+      .unwrap()
+      .then(() => {
+        navigate("/user-profile");
+        window.location.reload();
+      })
+      .catch((e: any) => {
+        toast.error("Bad credentials");
+      });
   };
 
   useEffect(() => {
+    if (searchParams.get("t") !== null && searchParams.get("e") !== null) {
+      var token = searchParams.get("t");
+      try {
+        //@ts-ignore
+        var decodedToken = jwtDecode(token);
+        const data = {
+          token: searchParams.get("t"),
+          exp: searchParams.get("e"),
+        };
+        // @ts-ignore
+        userLoginOAuth(data);
+        navigate("/user-profile");
+        window.location.reload();
+      } catch {}
+    }
+
     if (userToken || userToken) {
       navigate("/user-profile");
     }
@@ -111,6 +138,19 @@ function Login() {
             >
               Sign In
             </Button>
+            <Typography align="center">Or</Typography>
+            <Button
+              href="http://localhost:8000/api/oauth2/authorization/google"
+              fullWidth
+              variant="contained"
+              color="inherit"
+              sx={{ mt: 3, mb: 2, justifyContent: "flex-start" }}
+            >
+              <GoogleIcon fontSize="small"></GoogleIcon>
+              <Typography component="p" align="center" sx={{ width: "100%" }}>
+                Login using google
+              </Typography>
+            </Button>
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
@@ -118,7 +158,7 @@ function Login() {
                 </Link>
               </Grid>
               <Grid item>
-                <Link href="" variant="body2">
+                <Link href="/register" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

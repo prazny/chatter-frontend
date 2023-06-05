@@ -12,19 +12,22 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-// @ts-ignore
 import chatter from "./../../../assets/chatter.png";
-// @ts-ignore
 import logo from "./../../../assets/logo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/authSlice";
 import GuestNavbar from "./GuestNavbar";
+import { Link, useNavigate } from "react-router-dom";
 
-const pages = ["Sites", "Chats", "Stats"];
-const settings = ["Profile", "Logout"];
+const pages = [
+  ["Sites", "/sites"],
+  ["Chats", "/chats"],
+  ["Stats", "/stats"],
+];
 
 function Navbar() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { userToken, userInfo } = useSelector(
     // @ts-ignore
     (state) => state.auth
@@ -56,13 +59,18 @@ function Navbar() {
     // @ts-ignore
     dispatch(logout());
   };
-
-  if (!userInfo || !userToken) return <GuestNavbar />;
+  const settings = [
+    ["Profile", () => navigate("/user-profile")],
+    ["Logout", logoutCl],
+  ];
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar>
           <img src={logo} width="30px" alt="Chatter logo" />
           <Box
             sx={{
@@ -109,8 +117,8 @@ function Navbar() {
             >
               {userToken &&
                 pages.map((page) => (
-                  <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{page}</Typography>
+                  <MenuItem key={page[0]} onClick={handleCloseNavMenu}>
+                    <Typography textAlign="center">{page[0]}</Typography>
                   </MenuItem>
                 ))}
             </Menu>
@@ -137,13 +145,15 @@ function Navbar() {
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {userToken &&
               pages.map((page) => (
-                <Button
-                  key={page}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
+                <Link to={page[1]}>
+                  <Button
+                    key={page[0]}
+                    onClick={handleCloseNavMenu}
+                    sx={{ my: 2, color: "white", display: "block" }}
+                  >
+                    {page[0]}
+                  </Button>
+                </Link>
               ))}
           </Box>
 
@@ -176,9 +186,17 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              <MenuItem key="logout" onClick={logoutCl}>
-                <Typography textAlign="center">Logout</Typography>
-              </MenuItem>
+              {userToken &&
+                settings.map((setting_elem) => (
+                  <MenuItem
+                    key={setting_elem[0] as any}
+                    onClick={setting_elem[1] as any}
+                  >
+                    <Typography textAlign="center">
+                      {setting_elem[0] as String}
+                    </Typography>
+                  </MenuItem>
+                ))}
             </Menu>
           </Box>
         </Toolbar>

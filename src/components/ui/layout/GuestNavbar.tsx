@@ -53,7 +53,7 @@ function GuestNavbar() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="fixed" sx={{zIndex: (theme) => theme.zIndex.drawer + 1}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <img src={logo} width="30px" alt="Chatter logo" />

@@ -39,7 +39,6 @@ const authSlice = createSlice({
     // @ts-ignore
     [userLogin.fulfilled]: (state, { payload }) => {
       state.loading = false;
-      //state.userInfo = payload;
       state.userToken = payload.token;
     },
     // @ts-ignore
