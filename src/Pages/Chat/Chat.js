@@ -15,9 +15,11 @@ import { useSelector } from "react-redux";
 export default function Chat() {
   const { id } = useParams();
 
-  const user = useSelector((state) => state.auth);
+  //   const user = useSelector((state) => state.auth);
 
   const { data, errors, isLoading } = useGetChatQuery(id);
+
+  //   console.log(user);
 
   return (
     <Grid container>
@@ -34,15 +36,15 @@ export default function Chat() {
       <Grid item xs={12} sm={12} md={12} sx={{ m: 1 }}>
         <Box>
           <Divider />
-          {!isLoading && !user.loading && (
+          {!isLoading && (
             <Conversation
               nicknameProp={data.customerName}
               UUIDProp={data.customerUUID}
-              nameProp={
-                user.userInfo
-                  ? user.userInfo.firstName + " " + user.userInfo.lastName
-                  : ""
-              }
+              //   nameProp={
+              //     user.userInfo
+              //       ? user.userInfo.firstName + " " + user.userInfo.lastName
+              //       : ""
+              //   }
               tokenProp={data.chatToken}
               //   historyProp={messagesHistory.data}
             />

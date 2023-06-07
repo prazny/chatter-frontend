@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import { useGetMessagesQuery } from "../../services/chats";
 import { useParams } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 export default function Conversation(props) {
   // constructor(props) {
@@ -44,6 +44,8 @@ export default function Conversation(props) {
   const { id } = useParams();
   const messagesHistory = useGetMessagesQuery(id);
 
+  const user = useSelector((state) => state.auth);
+
   const pushMessage = (message) => {
     // console.log(message);
     if (message.from == null) message.from = nickname;
@@ -56,13 +58,16 @@ export default function Conversation(props) {
     console.log(messages);
   };
 
-  // console.log(messagesHistory);
-  const dispatch = useDispatch();
+  console.log(user);
 
   useEffect(() => {
     setNick(props.nicknameProp);
     setUUID(props.UUIDProp);
-    setName(props.nameProp);
+    setName(
+      user.userInfo
+        ? user.userInfo.firstName + " " + user.userInfo.lastName
+        : localStorage.getItem("userName")
+    );
     setMessage("");
     setMessages([]);
     setHistory([]);
@@ -72,6 +77,7 @@ export default function Conversation(props) {
 
   if (
     !messagesHistory.isLoading &&
+    messagesHistory.data &&
     messagesHistory.data.length > 0 &&
     historyMessages.length === 0
   ) {
