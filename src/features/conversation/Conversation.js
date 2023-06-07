@@ -15,37 +15,77 @@ import { Message } from "./Message";
 import { Info } from "./Info";
 import { Image } from "./Image";
 import SendIcon from "@mui/icons-material/Send";
+import { useEffect, useState } from "react";
+import { useGetMessagesQuery } from "../../services/chats";
+import { useParams } from "react-router-dom";
 
-export class Conversation extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nickname: this.props.nickname,
-      customerUUID: this.props.customerUUID,
-      yourName: this.props.yourName,
-      message: "",
-      messages: [],
-      ws: new Socket(this.pushMessage, this.props.customerUUID),
-    };
+import { useDispatch } from "react-redux";
 
-    //this.repo = new SimpleRepository();
-    // this.updateRoom();
-    //this.uploadInput = React.createRef(null);
+export default function Conversation(props) {
+  // constructor(props) {
 
-    //socket.on("push-message", this.pushMessage);
-    //socket.on("push-info", this.pushInfo);
-    //socket.on("push-image", this.pushImage);
-    //socket.on("typing", this.typing);
+  //   console.log(this.props.nickname);
+
+  //   console.log(this.state.historyMessages);
+
+  //   //this.repo = new SimpleRepository();
+  //   //this.uploadInput = React.createRef(null);
+  // }
+
+  const [nickname, setNick] = useState("");
+  const [customerUUID, setUUID] = useState("");
+  const [yourName, setName] = useState("");
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [historyMessages, setHistory] = useState([]);
+  const [chatToken, setToken] = useState("");
+  const [ws, setWs] = useState(null);
+
+  const { id } = useParams();
+  const messagesHistory = useGetMessagesQuery(id);
+
+  const pushMessage = (message) => {
+    // console.log(message);
+    if (message.from == null) message.from = nickname;
+
+    setMessages((current) => [
+      ...current,
+      { type: "message", content: message },
+    ]);
+
+    console.log(messages);
+  };
+
+  // console.log(messagesHistory);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setNick(props.nicknameProp);
+    setUUID(props.UUIDProp);
+    setName(props.nameProp);
+    setMessage("");
+    setMessages([]);
+    setHistory([]);
+    setToken(props.tokenProp);
+    setWs(new Socket(pushMessage, customerUUID));
+  }, []);
+
+  if (
+    !messagesHistory.isLoading &&
+    messagesHistory.data.length > 0 &&
+    historyMessages.length === 0
+  ) {
+    console.log("test");
+    messagesHistory.data.map((mess) => {
+      pushMessage({
+        message: mess.content,
+        from: mess.senderName,
+        time: mess.sendDate,
+      });
+    });
+    setHistory(messagesHistory.data);
   }
 
-  pushMessage = (message) => {
-    if (message.from == null) message.from = this.props.nickname;
-
-    this.setState((current) => ({
-      messages: [...current.messages, { type: "message", content: message }],
-    }));
-    console.log(this.state.messages);
-  };
   //
   //   pushInfo = (message) => {
   //     this.setState((current) => ({
@@ -60,100 +100,67 @@ export class Conversation extends React.Component {
   //     }));
   // };
   //
-  //   typing = (message) => {
-  //     if (!this.state.typiers.includes(message.from)) {
-  //       this.setState((current) => ({
-  //         typiers: [...current.typiers, message.from],
-  //       }));
-  //     }
 
-  //     setTimeout(() => {
-  //       this.setState((current) => ({
-  //         typiers: [],
-  //       }));
-  //     }, 5000);
-  //   };
-  //
-  // componentDidUpdate(prevProps) {
-  //     if (prevProps.slug !== this.props.slug) {
-  //         //this.updateRoom();
-  //     }
-  // }
-
-  /*updateRoom() {
-        if (this.props.slug !== null) {
-            this.repo.getRoom(this.props.slug).then((data) => {
-                this.setState({ room: data });
-                this.setState({ messages: [] });
-                console.log(this.state.room);
-            });
-        }
-    }*/
-
-  getTime = () => {
+  const getTime = () => {
     let date = new Date();
     return date.toUTCString();
   };
 
-  handleChange = (event) => {
-    this.setState({ message: event.target.value });
-    this.setState({ isTyping: true });
-
-    setTimeout(() => {
-      this.setState({ isTyping: false });
-    }, 3000);
-
-    //   socket.emit("typing");
-  };
   //
   // handleUpload = (event) => {
   //     console.log("started up");
   //     socket.emit("upload", event.target.files[0]);
   // };
   //
-  handleSubmit = (event) => {
-    let date = this.getTime();
-    this.state.ws.send({
-      message: this.state.message,
-      userTo: this.state.customerUUID,
+  const handleSubmit = (event) => {
+    let date = getTime();
+    ws.send({
+      message: message,
+      userTo: customerUUID,
+      senderName: yourName,
+      senderType: "CONSULTANT",
+      chatToken: chatToken,
       date: date,
     });
-    this.pushMessage({
-      message: this.state.message,
-      from: this.state.yourName,
+    pushMessage({
+      message: message,
+      from: yourName,
       time: date,
     });
-    this.setState({ message: "" });
+    setMessage("");
     event.preventDefault();
   };
 
-  render() {
-    return (
-      <Box>
-        <List
-          sx={{
-            height: "68vh",
-            overflowY: "auto",
-          }}
-        >
-          {this.state.messages.map((el, index) => {
-            return el.type === "message" ? (
-              <Message
-                isMe={el.content.from === this.state.yourName}
-                message={el.content}
-                key={index}
-              />
-            ) : el.type === "info" ? (
-              <Info message={el.content} key={index} />
-            ) : (
-              <Image
-                isMe={el.content.from === this.state.yourName}
-                message={el.content}
-                key={index}
-              />
-            );
-          })}
-          {/* <ListItem>
+  const handleChange = (event) => {
+    setMessage(event.target.value);
+  };
+  return (
+    <Box>
+      <List
+        sx={{
+          height: "68vh",
+          overflowY: "auto",
+        }}
+      >
+        {messages.map((el, index) => {
+          console.log(el);
+          return el.type === "message" ? (
+            <Message
+              isMe={el.content.from === yourName}
+              message={el.content}
+              key={index}
+            />
+          ) : el.type === "info" ? (
+            <Info message={el.content} key={index} />
+          ) : (
+            <Image
+              isMe={el.content.from === yourName}
+              message={el.content}
+              key={index}
+            />
+          );
+        })}
+        {/* <ListItem>
             <Grid container justifyContent="flex-start">
               <Grid item xs={5} md={8}>
                 <ListItemText
@@ -170,28 +177,27 @@ export class Conversation extends React.Component {
               </Grid>
             </Grid>
           </ListItem> */}
-        </List>
-        <Divider />
-        <Grid container style={{ padding: "20px" }}>
-          <Grid item xs={10}>
-            <form onSubmit={this.handleSubmit}>
-              <TextField
-                type="input"
-                onChange={this.handleChange}
-                value={this.state.message}
-                id="outlined-basic-email"
-                label="Type message"
-                fullWidth
-              />
-            </form>
-          </Grid>
-          <Grid item xs={1} align="right" marginLeft={2}>
-            <Fab onClick={this.handleSubmit} color="primary" aria-label="add">
-              <SendIcon />
-            </Fab>
-          </Grid>
+      </List>
+      <Divider />
+      <Grid container style={{ padding: "20px" }}>
+        <Grid item xs={10}>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              type="input"
+              onChange={handleChange}
+              value={message}
+              id="outlined-basic-email"
+              label="Type message"
+              fullWidth
+            />
+          </form>
         </Grid>
-      </Box>
-    );
-  }
+        <Grid item xs={1} align="right" marginLeft={2}>
+          <Fab onClick={handleSubmit} color="primary" aria-label="add">
+            <SendIcon />
+          </Fab>
+        </Grid>
+      </Grid>
+    </Box>
+  );
 }

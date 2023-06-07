@@ -6,17 +6,18 @@ import RoundedBox from "../../components/ui/RoundedBox";
 import Typography from "@mui/material/Typography";
 import AddSite from "../Sites/parts/AddSite";
 import SitesTable from "../Sites/parts/SitesTable";
-import { useParams, s } from "react-router-dom";
-import { useGetChatQuery } from "../../services/chats";
-import { Conversation } from "../../features/conversation/Conversation";
+import { useParams } from "react-router-dom";
+import { useGetChatQuery, useGetMessagesQuery } from "../../services/chats";
+import Conversation from "../../features/conversation/Conversation";
 import { Divider } from "@mui/material";
 import { useSelector } from "react-redux";
 
 export default function Chat() {
   const { id } = useParams();
+
+  const user = useSelector((state) => state.auth);
+
   const { data, errors, isLoading } = useGetChatQuery(id);
-  const { userToken, userInfo } = useSelector((state) => state.auth);
-  console.log(data);
 
   return (
     <Grid container>
@@ -33,13 +34,17 @@ export default function Chat() {
       <Grid item xs={12} sm={12} md={12} sx={{ m: 1 }}>
         <Box>
           <Divider />
-          {!isLoading && (
+          {!isLoading && !user.loading && (
             <Conversation
-              nickname={data.customerName}
-              customerUUID={data.customerUUID}
-              yourName={
-                userInfo ? userInfo.firstName + " " + userInfo.lastName : ""
+              nicknameProp={data.customerName}
+              UUIDProp={data.customerUUID}
+              nameProp={
+                user.userInfo
+                  ? user.userInfo.firstName + " " + user.userInfo.lastName
+                  : ""
               }
+              tokenProp={data.chatToken}
+              //   historyProp={messagesHistory.data}
             />
           )}
         </Box>
