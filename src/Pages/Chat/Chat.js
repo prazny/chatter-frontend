@@ -22,8 +22,8 @@ export default function Chat() {
   //   console.log(user);
 
   return (
-    <Grid container>
-      <Grid item xs={12} sm={12} md={12} sx={{ mt: 5 }}>
+    <Grid container >
+      <Grid item xs={12} sm={12} md={12} sx={{ mt: 10, height: "100%" }}>
         <Grid container spacing={2} sx={{ ml: 2 }}>
           <Grid item>
             <Typography variant="h6">
