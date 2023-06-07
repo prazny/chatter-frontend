@@ -42,6 +42,13 @@ export const chatsApi = createApi({
       }),
       invalidatesTags: ["Chat"],
     }),
+    endChat: builder.mutation({
+      query: (id) => ({
+        url: "/" + id + "/end",
+        method: "POST",
+      }),
+      invalidatesTags: ["Chat"],
+    }),
   }),
 });
 
@@ -51,4 +58,5 @@ export const {
   useGetMessagesQuery,
   useAssignChatMutation,
   useLazyGetMessagesQuery,
+  useEndChatMutation,
 } = chatsApi;

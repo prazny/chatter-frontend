@@ -1,4 +1,4 @@
-import React, {useRef} from "react";
+import React, { useRef } from "react";
 import {
   Box,
   Divider,
@@ -46,7 +46,7 @@ export default function Conversation(props) {
 
   const user = useSelector((state) => state.auth);
 
-  const messagesEndRef = useRef(null)
+  const messagesEndRef = useRef(null);
 
   const pushMessage = (message) => {
     // console.log(message);
@@ -71,12 +71,11 @@ export default function Conversation(props) {
     setHistory([]);
     setToken(props.tokenProp);
     setWs(new Socket(pushMessage, props.UUIDProp));
-
   }, []);
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages])
+  }, [messages]);
 
   if (
     !messagesHistory.isLoading &&
@@ -144,8 +143,8 @@ export default function Conversation(props) {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <Box>
@@ -193,25 +192,27 @@ export default function Conversation(props) {
           </ListItem> */}
       </List>
       <Divider />
-      <Grid container spacing={1} style={{ padding: "20px"}}>
-        <Grid item xs={11}>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              type="input"
-              onChange={handleChange}
-              value={message}
-              id="outlined-basic-email"
-              label="Type message"
-              fullWidth
-            />
-          </form>
+      {props.isFinished === "IN_PROGRESS" && (
+        <Grid container spacing={1} style={{ padding: "20px" }}>
+          <Grid item xs={11}>
+            <form onSubmit={handleSubmit}>
+              <TextField
+                type="input"
+                onChange={handleChange}
+                value={message}
+                id="outlined-basic-email"
+                label="Type message"
+                fullWidth
+              />
+            </form>
+          </Grid>
+          <Grid item xs={1}>
+            <Fab onClick={handleSubmit} color="primary" aria-label="add">
+              <SendIcon />
+            </Fab>
+          </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Fab onClick={handleSubmit} color="primary" aria-label="add">
-            <SendIcon />
-          </Fab>
-        </Grid>
-      </Grid>
+      )}
     </Box>
   );
 }
