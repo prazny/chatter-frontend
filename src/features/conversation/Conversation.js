@@ -48,17 +48,13 @@ export default function Conversation(props) {
 
   const pushMessage = (message) => {
     // console.log(message);
-    if (message.from == null) message.from = nickname;
+    if (message.from == null) message.from = props.nicknameProp;
 
     setMessages((current) => [
       ...current,
       { type: "message", content: message },
     ]);
-
-    console.log(messages);
   };
-
-  console.log(user);
 
   useEffect(() => {
     setNick(props.nicknameProp);
@@ -72,7 +68,7 @@ export default function Conversation(props) {
     setMessages([]);
     setHistory([]);
     setToken(props.tokenProp);
-    setWs(new Socket(pushMessage, customerUUID));
+    setWs(new Socket(pushMessage, props.UUIDProp));
   }, []);
 
   if (
@@ -81,7 +77,6 @@ export default function Conversation(props) {
     messagesHistory.data.length > 0 &&
     historyMessages.length === 0
   ) {
-    console.log("test");
     messagesHistory.data.map((mess) => {
       pushMessage({
         message: mess.content,
