@@ -19,6 +19,8 @@ function UserProfile() {
   const { register, handleSubmit, reset } = useForm();
   const [patchUser, { error }] = usePatchUserMutation();
 
+  console.log(userInfo);
+
   const submitForm = (data: any) => {
     console.log(data.password);
     // @ts-ignore
@@ -83,47 +85,50 @@ function UserProfile() {
         </RoundedBox>
       </Grid>
       <Grid item md={6}>
-        <RoundedBox>
-          <Box
-            component="form"
-            noValidate
-            sx={{ mt: 1 }}
-            onSubmit={handleSubmit(submitForm)}
-          >
-            <Typography variant="overline" gutterBottom>
-              Update password
-            </Typography>
-            <Typography>
-              Passwords are used as a security measure to protect access to
-              sensitive information or resources, and updating them regularly
-              helps to reduce the risk of unauthorized access or data breaches.
-            </Typography>
-            <TextField
-              error={
-                error &&
-                (error as any)?.data.errors.password &&
-                (error as any)?.data.errors.password[0]
-              }
-              helperText={
-                error &&
-                (error as any)?.data.errors.password &&
-                (error as any)?.data.errors.password[0]
-              }
-              type="password"
-              margin="normal"
-              required
-              fullWidth
-              id="password"
-              label="New password"
-              autoComplete="password"
-              autoFocus
-              {...register("password")}
-            />
-            <Button variant="contained" type="submit">
-              Update
-            </Button>
-          </Box>
-        </RoundedBox>
+        {userInfo && userInfo.provider !== "GOOGLE" && (
+          <RoundedBox>
+            <Box
+              component="form"
+              noValidate
+              sx={{ mt: 1 }}
+              onSubmit={handleSubmit(submitForm)}
+            >
+              <Typography variant="overline" gutterBottom>
+                Update password
+              </Typography>
+              <Typography>
+                Passwords are used as a security measure to protect access to
+                sensitive information or resources, and updating them regularly
+                helps to reduce the risk of unauthorized access or data
+                breaches.
+              </Typography>
+              <TextField
+                error={
+                  error &&
+                  (error as any)?.data.errors.password &&
+                  (error as any)?.data.errors.password[0]
+                }
+                helperText={
+                  error &&
+                  (error as any)?.data.errors.password &&
+                  (error as any)?.data.errors.password[0]
+                }
+                type="password"
+                margin="normal"
+                required
+                fullWidth
+                id="password"
+                label="New password"
+                autoComplete="password"
+                autoFocus
+                {...register("password")}
+              />
+              <Button variant="contained" type="submit">
+                Update
+              </Button>
+            </Box>
+          </RoundedBox>
+        )}
       </Grid>
     </Grid>
   );
